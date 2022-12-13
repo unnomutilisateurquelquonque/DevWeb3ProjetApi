@@ -22,8 +22,8 @@ router.get('/', async (req, res) => {
 router.post('/', async (req, res) => {
   await mongoose.connect(process.env.DB_URI);
     try {
-        const persona = new persona(req.body);
-        const personaAjouter = await persona.save();
+        const nouvellepersona = new persona(req.body);
+        const personaAjouter = await nouvellepersona.save();
         res.json(personaAjouter);
   } catch(err) {
     console.log(err.message);

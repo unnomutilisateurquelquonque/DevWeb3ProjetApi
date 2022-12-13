@@ -26,9 +26,9 @@ const PersonaSchema = new Schema(
         divin:{type:String},
         maledition:{type:String},  
       },
-      date:{type: Date},
-      obtenue: {type:Boolean},
     },
+    obtenue: {type:Boolean},
+    date:{type: Date},
   }
 );
 //Exportation du modèle Auteur
