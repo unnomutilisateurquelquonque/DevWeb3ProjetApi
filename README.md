@@ -5,3 +5,4 @@ Ajout de s fonctinalité suivant:
   - Ajout de la route /persona/arcanes/:arcane (2e filtre)
   - Ajout des validations mongoose
   - Ajout de message personalisé lors de la validation
+  - Ajout de deux propriétés virtuels
