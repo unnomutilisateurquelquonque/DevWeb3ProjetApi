@@ -117,7 +117,7 @@ const persona = require("../models/persona");
  *       example:
  *         arcane: "arcane"
  *         count: 17
-  *    groupObtenue:
+ *     groupObtenue:
  *       properties:
  *         obtenue:
  *            type : boolean
@@ -150,6 +150,8 @@ const persona = require("../models/persona");
  *      '500':
  *        description: Une erreur est survenue
  */
+
+//Get tout les personas
 router.get('/', async (req, res) => {
   await mongoose.connect(process.env.DB_URI);
     try {
@@ -189,6 +191,7 @@ router.get('/', async (req, res) => {
  *      '500':
  *        description: Une erreur est survenue
  */
+
 /* GET une persona par id */
 router.get('/:id', async (req, res) => {
   await mongoose.connect(process.env.DB_URI);
@@ -235,6 +238,7 @@ router.get('/:id', async (req, res) => {
  *      '500':
  *        description: Une erreur est survenue
  */
+
 /* GET la liste des personas entre deux lv*/
 router.get('/:lvMin/:lvMax', async (req, res) => {
   let lvMin = parseInt(req.params.lvMin);
@@ -263,7 +267,7 @@ router.get('/:lvMin/:lvMax', async (req, res) => {
  * /personas/arcane/:arcance:
  *   get:
  *     tags:
- *        - personas/arcane/:arcance
+ *        - personas/arcane/:arcace
  *     description: affiche le nombre de persona de l'arcane choise
  *     parameters:
  *      - arcane: arcane
@@ -284,6 +288,7 @@ router.get('/:lvMin/:lvMax', async (req, res) => {
  *      '500':
  *        description: Une erreur est survenue
  */
+
 /* GET compte le noubre de persona d'une arcane */
 router.get('/arcane/:arcane', async (req, res) => {
   let Larcane = req.params.arcane;
@@ -294,6 +299,49 @@ router.get('/arcane/:arcane', async (req, res) => {
           $group: { _id: Larcane, count: { $sum: 1 } } 
         }
       ]);
+      res.json(personas);
+  } catch(err) {
+    console.log(err.message);
+    res.status(500).json({erreur: "Une erreur est survenue, veuillez contacter votre administrateur"})
+  } finally {
+    mongoose.connection.close();
+  }
+});
+
+
+/**
+ * @openapi
+ * /personas/arcanes/:arcance:
+ *   get:
+ *     tags:
+ *        - personas/arcanes/:arcace
+ *     description: affiche les personas de l'arcane choisie
+ *     parameters:
+ *      - arcane: arcane
+ *        in: path
+ *        required: true
+ *        description: l'arcane a compter
+ *        schema:
+ *          type: string
+ *     responses:
+ *      '200':
+ *        description: Tableau arcane
+ *        content: 
+ *          application/json:
+ *            schema: 
+ *                type: array
+ *                items:
+ *                    $ref: '#/components/schemas/groupArcane'
+ *      '500':
+ *        description: Une erreur est survenue
+ */
+
+/* GET compte le noubre de persona d'une arcane */
+router.get('/arcanes/:arcane', async (req, res) => {
+  let Larcane = req.params.arcane;
+  await mongoose.connect(process.env.DB_URI);
+    try {
+      const personas = await persona.find(persona.arcane = Larcane);
       res.json(personas);
   } catch(err) {
     console.log(err.message);
@@ -329,6 +377,7 @@ router.get('/arcane/:arcane', async (req, res) => {
  *      '500':
  *        description: Une erreur est survenue
  */
+
 /* GET compte le noubre de persona d'une arcane */
 router.get('/obtenue/:obtenueTotal', async (req, res) => {
   let obtenueTotal = (req.params.obtenueTotal =="true");
@@ -355,7 +404,7 @@ router.get('/obtenue/:obtenueTotal', async (req, res) => {
  * /personas:
  *   post:
  *     tags:
- *        - personas/
+ *        - personas
  *     description: affiche le nombre de persona obtenue ou non
  *     responses:
  *      '200':
@@ -368,7 +417,9 @@ router.get('/obtenue/:obtenueTotal', async (req, res) => {
  *                    $ref: '#/components/schemas/Persona'
  *      '500':
  *        description: Une erreur est survenue lors de l'ajout
-/*Post*/ 
+ */
+
+//Post 
 router.post('/', async (req, res) => {
   await mongoose.connect(process.env.DB_URI);
     try {
@@ -390,7 +441,7 @@ router.post('/', async (req, res) => {
  * /personas:
  *   put:
  *     tags:
- *        - personas/
+ *        - personas
  *     description: affiche le nombre de persona obtenue ou non
  *     parameters:
  *      - id: id
@@ -401,7 +452,7 @@ router.post('/', async (req, res) => {
  *          type: string
  *     responses:
  *      '200':
- *        description:modifie une persona avec l'id
+ *        description: modifie une persona avec l id
  *        content: 
  *          application/json:
  *            schema: 
@@ -411,6 +462,7 @@ router.post('/', async (req, res) => {
  *      '500':
  *        description: Une erreur est survenue lors de la modification
  */
+
 /*Put*/ 
 router.put('/:id', async (req, res) => {
   await mongoose.connect(process.env.DB_URI);
@@ -431,7 +483,7 @@ router.put('/:id', async (req, res) => {
  * /personas:
  *   delete:
  *     tags:
- *        - personas/
+ *        - personas
  *     description: delete une persona avec l'id choisie
  *     parameters:
  *      - id: id
@@ -452,6 +504,7 @@ router.put('/:id', async (req, res) => {
  *      '500':
  *        description: Une erreur est survenue lors de la suppression
  */
+
 /* supprime une persona */
 router.delete('/:id', async (req, res) => {
   await mongoose.connect(process.env.DB_URI);
